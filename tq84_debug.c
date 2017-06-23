@@ -33,7 +33,7 @@ void tq84_debug_open() {
 
   sprintf(file_name,
 #ifdef unix
-      "/tmp/tq84/"
+      "/tmp/"
 #else
       "c:\\temp\\"
 #endif
