@@ -13,7 +13,7 @@ void tq84_debug_out(const char* fmt, va_list ap) {
 //va_list ap; va_start(ap, fmt);
   vfprintf(f_debug, fmt, ap);
 
-  fprintf(f_debug, "\n");
+//fprintf(f_debug, "\n");
 }
 
 void tq84_debug_indent_() {
@@ -42,7 +42,6 @@ void tq84_debug_open() {
   f_debug = fopen(file_name, "a");
 }
 
-
 void tq84_debug_indent(const char* fmt, ...) {
 
   va_list ap; va_start(ap, fmt);
@@ -50,25 +49,31 @@ void tq84_debug_indent(const char* fmt, ...) {
   tq84_debug_indent_();
   tq84_debug_out(fmt, ap);
 
-  tq84_debug_out("{\n", NULL);
+//tq84_debug_out("{\n", NULL);
+  fprintf(f_debug, " {\n");
+  fflush(f_debug);
 
   indent++;
 }
+
 void tq84_debug_dedent(/*const char* fmt, ...*/) {
 
-  tq84_debug_indent_();
-//va_list ap; va_start(ap, fmt);
-//tq84_debug_out(fmt, ap);
-
-  tq84_debug_out("}\n", NULL);
-
   indent--;
+  tq84_debug_indent_();
+
+//tq84_debug_out("}\n", NULL);
+  fprintf(f_debug, "}\n");
+  fflush(f_debug);
+
 }
 void tq84_debug(const char* fmt, ...) {
   va_list ap; va_start(ap, fmt);
-  tq84_debug_out(fmt, ap);
 
   tq84_debug_indent_();
+  tq84_debug_out(fmt, ap);
 
-  tq84_debug_out("\n", NULL);
+//tq84_debug_out("\n", NULL);
+  fprintf(f_debug, "\n");
+
+  fflush(f_debug);
 }
