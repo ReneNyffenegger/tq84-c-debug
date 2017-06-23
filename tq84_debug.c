@@ -9,7 +9,7 @@ FILE* f_debug = NULL;
 int   indent;
 
 
-void tq84_debug_out(char* fmt, va_list ap) {
+void tq84_debug_out(const char* fmt, va_list ap) {
 //va_list ap; va_start(ap, fmt);
   vfprintf(f_debug, fmt, ap);
 
@@ -30,12 +30,20 @@ void tq84_debug_open() {
 
   t=time(NULL);
   tm = *localtime(&t);
-  sprintf(file_name, "c:\\temp\\tq84_vim_debug_%4d-%02d_%02d_%02d.%02d.%02d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+  sprintf(file_name,
+#ifdef unix
+      "/tmp/tq84/"
+#else
+      "c:\\temp\\"
+#endif
+      "tq84_vim_debug_%4d-%02d_%02d_%02d.%02d.%02d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
   f_debug = fopen(file_name, "a");
 }
 
 
-void tq84_debug_indent(char* fmt, ...) {
+void tq84_debug_indent(const char* fmt, ...) {
 
   va_list ap; va_start(ap, fmt);
  
@@ -46,7 +54,7 @@ void tq84_debug_indent(char* fmt, ...) {
 
   indent++;
 }
-void tq84_debug_dedent(/*char* fmt, ...*/) {
+void tq84_debug_dedent(/*const char* fmt, ...*/) {
 
   tq84_debug_indent_();
 //va_list ap; va_start(ap, fmt);
@@ -56,7 +64,7 @@ void tq84_debug_dedent(/*char* fmt, ...*/) {
 
   indent--;
 }
-void tq84_debug(char* fmt, ...) {
+void tq84_debug(const char* fmt, ...) {
   va_list ap; va_start(ap, fmt);
   tq84_debug_out(fmt, ap);
 
