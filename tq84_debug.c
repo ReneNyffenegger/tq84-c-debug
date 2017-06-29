@@ -22,7 +22,13 @@ void tq84_debug_out(const char* fmt, va_list ap) {
 #endif
 }
 
-void tq84_debug_indent_() {
+static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
+  if (env == 1) return 0;
+
+  return 1;
+}
+
+static void tq84_debug_indent_() {
 #ifdef TQ84_DEBUG
 
   if (! f_debug) tq84_debug_open();
@@ -56,10 +62,12 @@ void tq84_debug_open() {
 #endif
 }
 
-void tq84_debug_indent(const char* fmt, ...) {
+void tq84_debug_indent(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
 #ifdef TQ84_DEBUG
 
   va_list ap; va_start(ap, fmt);
+
+  if (tq84_debug_dont_env(env)) return;
  
   tq84_debug_indent_();
   tq84_debug_out(fmt, ap);
@@ -72,8 +80,10 @@ void tq84_debug_indent(const char* fmt, ...) {
 #endif
 }
 
-void tq84_debug_dedent(/*const char* fmt, ...*/) {
+void tq84_debug_dedent(TQ84_DEBUG_ENV_TYPE env /*const char* fmt, ...*/) {
 #ifdef TQ84_DEBUG
+
+  if (tq84_debug_dont_env(env)) return;
 
   indent--;
   tq84_debug_indent_();
@@ -84,9 +94,11 @@ void tq84_debug_dedent(/*const char* fmt, ...*/) {
 
 #endif
 }
-void tq84_debug(const char* fmt, ...) {
+void tq84_debug(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
 #ifdef TQ84_DEBUG
   va_list ap; va_start(ap, fmt);
+
+  if (tq84_debug_dont_env(env)) return;
 
   tq84_debug_indent_();
   tq84_debug_out(fmt, ap);
