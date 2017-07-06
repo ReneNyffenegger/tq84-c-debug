@@ -36,6 +36,8 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
   if (env ==   11) return 1; // wallet/wallet.cpp      CWallet::GetDebit, CWallet::IsFromMe, CWallet::AddToWalletIfInvolvingMe, CWallet::SyncTransaction
   if (env ==   12) return 0; // qt/bitcoin.cpp
   if (env ==   13) return 0; // qt/winshutdownmonitor.cpp
+  if (env ==   14) return 0; // wallet/db.cpp
+  if (env ==   15) return 0; // key.cpp
 
   return 1;
 }
@@ -57,6 +59,11 @@ void tq84_debug_open() {
   time_t t;
   struct tm tm;
   char file_name[200];
+
+  if (f_debug) {
+    // Don't reopen
+    return;
+  }
 
   t=time(NULL);
   tm = *localtime(&t);
