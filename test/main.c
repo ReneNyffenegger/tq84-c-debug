@@ -3,7 +3,6 @@
 void func_b() {
 TQ84_DEBUG_INDENT(1, "func_a");
 
-
 //tq84_debug_dedent(1);
 }
 
