@@ -21,7 +21,7 @@ void tq84_debug_var_goes_out_of_scope(int* v __attribute__((unused)) ) {
 void tq84_debug_out(const char* fmt, va_list ap) {
 #ifdef TQ84_DEBUG_ENABLED
 
-  if (! f_debug) tq84_debug_open();
+//if (! f_debug) tq84_debug_open();
 
 //va_list ap; va_start(ap, fmt);
   vfprintf(f_debug, fmt, ap);
@@ -55,7 +55,7 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
 static void tq84_debug_indent_() {
 #ifdef TQ84_DEBUG_ENABLED
 
-  if (! f_debug) tq84_debug_open();
+//if (! f_debug) tq84_debug_open();
 
   int i;
   for (i=0; i<indent*2; i++) {
