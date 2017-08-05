@@ -1,6 +1,11 @@
 
+diff: tq84_test
+	@./tq84_test
+	@diff /tmp/tq84_debug debug.expected
+
 tq84_test: tq84_debug.o main.o
 	@gcc tq84_debug.o main.o -o tq84_test
+
 
 tq84_debug.o: ../tq84_debug.c ../tq84_debug.h
 	@gcc -Wall -Wextra -c ../tq84_debug.c -o tq84_debug.o

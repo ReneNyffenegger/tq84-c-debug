@@ -1,0 +1,25 @@
+main {
+  Calling func_a with 42
+  func_a i=42 {
+    Calling func_forty_two
+    func_forty_two {
+    }
+  }
+  Calling func_a with 99
+  func_a i=99 {
+    Calling func_ninety_nine
+    func_ninety_nine {
+      loop from 5 to 10 {
+        i=5
+        i=6
+        i=7
+        i=8
+        i=9
+        Loop is over
+      }
+    }
+  }
+  Calling func_a with 57
+  func_a i=57 {
+  }
+}

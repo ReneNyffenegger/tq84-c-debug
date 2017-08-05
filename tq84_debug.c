@@ -30,6 +30,7 @@ void tq84_debug_out(const char* fmt, va_list ap) {
 #endif
 }
 
+/*
 static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
   if (env ==    1) return 0;
   if (env ==    2) return 0; // net_processing.cpp
@@ -49,6 +50,7 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
 
   return 1;
 }
+*/
 
 static void tq84_debug_indent_() {
 #ifdef TQ84_DEBUG_ENABLED
@@ -94,12 +96,12 @@ void tq84_debug_open() {
 #endif
 }
 
-int tq84_debug_indent(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
+int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
 
   va_list ap; va_start(ap, fmt);
 
-  if (tq84_debug_dont_env(env)) return 0;
+//if (tq84_debug_dont_env(env)) return 0;
  
   tq84_debug_indent_();
   tq84_debug_out(fmt, ap);
@@ -113,10 +115,10 @@ int tq84_debug_indent(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
   return 42;
 }
 
-void tq84_debug_dedent(TQ84_DEBUG_ENV_TYPE env /*const char* fmt, ...*/) {
+void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/ /*const char* fmt, ...*/) {
 #ifdef TQ84_DEBUG_ENABLED
 
-  if (tq84_debug_dont_env(env)) return;
+//if (tq84_debug_dont_env(env)) return;
 
   indent--;
   tq84_debug_indent_();
@@ -127,11 +129,11 @@ void tq84_debug_dedent(TQ84_DEBUG_ENV_TYPE env /*const char* fmt, ...*/) {
 
 #endif
 }
-void tq84_debug(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
+void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
   va_list ap; va_start(ap, fmt);
 
-  if (tq84_debug_dont_env(env)) return;
+//if (tq84_debug_dont_env(env)) return;
 
   tq84_debug_indent_();
   tq84_debug_out(fmt, ap);
