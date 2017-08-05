@@ -8,10 +8,18 @@ static FILE* f_debug = NULL;
 
 int   indent;
 
-#define TQ84_DEBUG 1
+#define TQ84_DEBUG_ENABLED 1
+
+#ifdef TQ84_DEBUG_ENABLED
+
+void tq84_debug_var_goes_out_of_scope(int* v __attribute__((unused)) ) {
+  tq84_debug_dedent(1);
+}
+
+#endif
 
 void tq84_debug_out(const char* fmt, va_list ap) {
-#ifdef TQ84_DEBUG
+#ifdef TQ84_DEBUG_ENABLED
 
   if (! f_debug) tq84_debug_open();
 
@@ -43,7 +51,7 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
 }
 
 static void tq84_debug_indent_() {
-#ifdef TQ84_DEBUG
+#ifdef TQ84_DEBUG_ENABLED
 
   if (! f_debug) tq84_debug_open();
 
@@ -55,9 +63,11 @@ static void tq84_debug_indent_() {
 }
 
 void tq84_debug_open() {
-#ifdef TQ84_DEBUG
+#ifdef TQ84_DEBUG_ENABLED
+  /*
   time_t t;
   struct tm tm;
+  */
   char file_name[200];
 
   if (f_debug) {
@@ -65,8 +75,10 @@ void tq84_debug_open() {
     return;
   }
 
+  /*
   t=time(NULL);
   tm = *localtime(&t);
+  */
 
   sprintf(file_name,
 #ifdef unix
@@ -77,16 +89,17 @@ void tq84_debug_open() {
 //    "tq84_debug_%4d-%02d_%02d_%02d.%02d.%02d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
       "tq84_debug");
 
-  f_debug = fopen(file_name, "a");
+//f_debug = fopen(file_name, "a");
+  f_debug = fopen(file_name, "w");
 #endif
 }
 
-void tq84_debug_indent(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
-#ifdef TQ84_DEBUG
+int tq84_debug_indent(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
+#ifdef TQ84_DEBUG_ENABLED
 
   va_list ap; va_start(ap, fmt);
 
-  if (tq84_debug_dont_env(env)) return;
+  if (tq84_debug_dont_env(env)) return 0;
  
   tq84_debug_indent_();
   tq84_debug_out(fmt, ap);
@@ -97,10 +110,11 @@ void tq84_debug_indent(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
 
   indent++;
 #endif
+  return 42;
 }
 
 void tq84_debug_dedent(TQ84_DEBUG_ENV_TYPE env /*const char* fmt, ...*/) {
-#ifdef TQ84_DEBUG
+#ifdef TQ84_DEBUG_ENABLED
 
   if (tq84_debug_dont_env(env)) return;
 
@@ -114,7 +128,7 @@ void tq84_debug_dedent(TQ84_DEBUG_ENV_TYPE env /*const char* fmt, ...*/) {
 #endif
 }
 void tq84_debug(TQ84_DEBUG_ENV_TYPE env, const char* fmt, ...) {
-#ifdef TQ84_DEBUG
+#ifdef TQ84_DEBUG_ENABLED
   va_list ap; va_start(ap, fmt);
 
   if (tq84_debug_dont_env(env)) return;
