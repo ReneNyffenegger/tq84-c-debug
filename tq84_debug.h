@@ -14,8 +14,9 @@ void tq84_debug       (/* TQ84_DEBUG_ENV_TYPE env, */  const char* filename, uns
 //void tq84_debug_out(const char* fmt, ...);
 
 void tq84_debug_var_goes_out_of_scope(int*);
-#define TQ84_DEBUG_INDENT(...) int TQ84_CONCAT_INDIRECT(tq84_debug_, __COUNTER__)  __attribute__((cleanup (tq84_debug_var_goes_out_of_scope) )) = tq84_debug_indent(__FILE__, __LINE__, __VA_ARGS__)
-#define TQ84_DEBUG(...)                                                                                                                           tq84_debug       (__FILE__, __LINE__, __VA_ARGS__)
+#define TQ84_DEBUG_INDENT_T(...)   int TQ84_CONCAT_INDIRECT(tq84_debug_, __COUNTER__)  __attribute__((cleanup (tq84_debug_var_goes_out_of_scope) )) = tq84_debug_indent(__FILE__, __LINE__, __VA_ARGS__)
+#define TQ84_DEBUG_INDENT()        int TQ84_CONCAT_INDIRECT(tq84_debug_, __COUNTER__)  __attribute__((cleanup (tq84_debug_var_goes_out_of_scope) )) = tq84_debug_indent(__FILE__, __LINE__,   ""       )
+#define TQ84_DEBUG(...)                                                                                                                               tq84_debug       (__FILE__, __LINE__, __VA_ARGS__)
 
 #ifdef __cplusplus
 }

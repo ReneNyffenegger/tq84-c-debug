@@ -2,13 +2,14 @@
 
 
 void func_forty_two() {
-  TQ84_DEBUG_INDENT("func_forty_two");
+  TQ84_DEBUG_INDENT();
+  TQ84_DEBUG("I am in func_forty_two");
 }
 
 void func_ninety_nine(int from, int to) {
-  TQ84_DEBUG_INDENT("func_ninety_nine");
+  TQ84_DEBUG_INDENT_T("func_ninety_nine");
 
-  { TQ84_DEBUG_INDENT("loop from %d to %d", from, to);
+  { TQ84_DEBUG_INDENT_T("loop from %d to %d", from, to);
 
     for (int i=from; i<to; i++) {
       TQ84_DEBUG("i=%d", i);
@@ -18,7 +19,7 @@ void func_ninety_nine(int from, int to) {
 }
 
 void func_a(int i) {
-  TQ84_DEBUG_INDENT("func_a i=%d", i);
+  TQ84_DEBUG_INDENT_T("func_a i=%d", i);
 
   if (i == 42) {
     TQ84_DEBUG("Calling func_forty_two");
@@ -33,7 +34,7 @@ void func_a(int i) {
 
 int main() {
   tq84_debug_open("w");
-  TQ84_DEBUG_INDENT("main");
+  TQ84_DEBUG_INDENT_T("main");
 
   TQ84_DEBUG("Calling func_a with 42");
   func_a(42);
