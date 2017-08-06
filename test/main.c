@@ -14,7 +14,6 @@ void func_ninety_nine(int from, int to) {
       TQ84_DEBUG("i=%d", i);
     }
     TQ84_DEBUG("Loop is over");
-
   }
 }
 

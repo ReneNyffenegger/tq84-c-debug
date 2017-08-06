@@ -1,25 +1,25 @@
-main {
-  Calling func_a with 42
-  func_a i=42 {
-    Calling func_forty_two
-    func_forty_two {
-    }
-  }
-  Calling func_a with 99
-  func_a i=99 {
-    Calling func_ninety_nine
-    func_ninety_nine {
-      loop from 5 to 10 {
-        i=5
-        i=6
-        i=7
-        i=8
-        i=9
-        Loop is over
-      }
-    }
-  }
-  Calling func_a with 57
-  func_a i=57 {
-  }
-}
+main.c                                               36: main {
+main.c                                               38:   Calling func_a with 42
+main.c                                               21:   func_a i=42 {
+main.c                                               24:     Calling func_forty_two
+main.c                                                5:     func_forty_two {
+                                                             }
+                                                           }
+main.c                                               40:   Calling func_a with 99
+main.c                                               21:   func_a i=99 {
+main.c                                               28:     Calling func_ninety_nine
+main.c                                                9:     func_ninety_nine {
+main.c                                               11:       loop from 5 to 10 {
+main.c                                               14:         i=5
+main.c                                               14:         i=6
+main.c                                               14:         i=7
+main.c                                               14:         i=8
+main.c                                               14:         i=9
+main.c                                               16:         Loop is over
+                                                               }
+                                                             }
+                                                           }
+main.c                                               42:   Calling func_a with 57
+main.c                                               21:   func_a i=57 {
+                                                           }
+                                                         }

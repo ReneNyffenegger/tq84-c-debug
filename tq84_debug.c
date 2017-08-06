@@ -13,7 +13,7 @@ int   indent;
 #ifdef TQ84_DEBUG_ENABLED
 
 void tq84_debug_var_goes_out_of_scope(int* v __attribute__((unused)) ) {
-  tq84_debug_dedent(1);
+  tq84_debug_dedent();
 }
 
 #endif
@@ -52,11 +52,17 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
 }
 */
 
-static void tq84_debug_indent_() {
+static void tq84_debug_indent_(const char* filename, unsigned int line) {
 #ifdef TQ84_DEBUG_ENABLED
 
 //if (! f_debug) tq84_debug_open();
 
+  if (filename) {
+    fprintf(f_debug, "%-50s %4d: ", filename, line);
+  }
+  else {
+    fprintf(f_debug, "%-50s       ", "");
+  }
   int i;
   for (i=0; i<indent*2; i++) {
     fprintf(f_debug, " ");
@@ -95,14 +101,14 @@ void tq84_debug_open(const char* mode_a_or_w) { // mode_a_or_w: a = append to lo
 #endif
 }
 
-int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* fmt, ...) {
+int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
 
   va_list ap; va_start(ap, fmt);
 
 //if (tq84_debug_dont_env(env)) return 0;
  
-  tq84_debug_indent_();
+  tq84_debug_indent_(filename, line);
   tq84_debug_out(fmt, ap);
 
 //tq84_debug_out("{\n", NULL);
@@ -114,13 +120,13 @@ int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* fmt, ...) {
   return 42;
 }
 
-void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/ /*const char* fmt, ...*/) {
+void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const char* fmt, ...*/) {
 #ifdef TQ84_DEBUG_ENABLED
 
 //if (tq84_debug_dont_env(env)) return;
 
   indent--;
-  tq84_debug_indent_();
+  tq84_debug_indent_(NULL, 0);
 
 //tq84_debug_out("}\n", NULL);
   fprintf(f_debug, "}\n");
@@ -128,13 +134,13 @@ void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/ /*const char* fmt, ...*/) {
 
 #endif
 }
-void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* fmt, ...) {
+void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
   va_list ap; va_start(ap, fmt);
 
 //if (tq84_debug_dont_env(env)) return;
 
-  tq84_debug_indent_();
+  tq84_debug_indent_(filename, line);
   tq84_debug_out(fmt, ap);
 
 //tq84_debug_out("\n", NULL);
