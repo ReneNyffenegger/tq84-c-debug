@@ -1,6 +1,5 @@
 #include "tq84_debug.h"
 
-
 void func_forty_two() {
   TQ84_DEBUG_INDENT();
   TQ84_DEBUG("I am in func_forty_two");

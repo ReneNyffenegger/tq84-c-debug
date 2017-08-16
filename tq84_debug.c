@@ -12,13 +12,25 @@ int   indent;
 
 #ifdef TQ84_DEBUG_ENABLED
 
-void tq84_debug_var_goes_out_of_scope(int* v __attribute__((unused)) ) {
+// -------------------------------------------------------------------
+//
+// Allow the user to define TQ84_DEBUG_EXPORT in order to
+// export(?) the tq84_debug* functions.
+// If no such definition was made, the TQ84_DEBUG_EXPORT is
+// set to nothing.
+//
+#ifndef TQ84_DEBUG_EXPORT
+#define TQ84_DEBUG_EXPORT
+#endif
+// -------------------------------------------------------------------
+
+TQ84_DEBUG_EXPORT void tq84_debug_var_goes_out_of_scope(int* v __attribute__((unused)) ) {
   tq84_debug_dedent();
 }
 
 #endif
 
-void tq84_debug_out(const char* fmt, va_list ap) {
+TQ84_DEBUG_EXPORT void tq84_debug_out(const char* fmt, va_list ap) {
 #ifdef TQ84_DEBUG_ENABLED
 
 //if (! f_debug) tq84_debug_open();
@@ -70,7 +82,7 @@ static void tq84_debug_indent_(const char* filename, unsigned int line) {
 #endif
 }
 
-void tq84_debug_open(const char* mode_a_or_w) { // mode_a_or_w: a = append to log file, w = create it
+TQ84_DEBUG_EXPORT void tq84_debug_open(const char* mode_a_or_w) { // mode_a_or_w: a = append to log file, w = create it
 #ifdef TQ84_DEBUG_ENABLED
   /*
   time_t t;
@@ -101,7 +113,7 @@ void tq84_debug_open(const char* mode_a_or_w) { // mode_a_or_w: a = append to lo
 #endif
 }
 
-int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigned int line, const char* fmt, ...) {
+TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
 
   va_list ap; va_start(ap, fmt);
@@ -120,7 +132,7 @@ int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigne
   return 42;
 }
 
-void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const char* fmt, ...*/) {
+TQ84_DEBUG_EXPORT void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const char* fmt, ...*/) {
 #ifdef TQ84_DEBUG_ENABLED
 
 //if (tq84_debug_dont_env(env)) return;
@@ -134,7 +146,7 @@ void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const char* fmt, ...*/) {
 
 #endif
 }
-void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigned int line, const char* fmt, ...) {
+TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
   va_list ap; va_start(ap, fmt);
 
