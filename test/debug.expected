@@ -2,7 +2,7 @@ main.c                                               36: main {
 main.c                                               38:   Calling func_a with 42
 main.c                                               21:   func_a i=42 {
 main.c                                               24:     Calling func_forty_two
-main.c                                                4:      {
+main.c                                                4:     func_forty_two {
 main.c                                                5:       I am in func_forty_two
                                                              }
                                                            }
