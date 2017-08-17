@@ -1,4 +1,6 @@
 
+.PHONY: diff
+
 diff: tq84_test
 	@./tq84_test
 	@diff /tmp/tq84_debug debug.expected
