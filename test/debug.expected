@@ -1,26 +1,26 @@
-main.c                                               36: main {
-main.c                                               38:   Calling func_a with 42
-main.c                                               21:   func_a i=42 {
-main.c                                               24:     Calling func_forty_two
-main.c                                                4:     func_forty_two {
-main.c                                                5:       I am in func_forty_two
-                                                             }
-                                                           }
-main.c                                               40:   Calling func_a with 99
-main.c                                               21:   func_a i=99 {
-main.c                                               28:     Calling func_ninety_nine
-main.c                                                9:     func_ninety_nine {
-main.c                                               11:       loop from 5 to 10 {
-main.c                                               14:         i=5
-main.c                                               14:         i=6
-main.c                                               14:         i=7
-main.c                                               14:         i=8
-main.c                                               14:         i=9
-main.c                                               16:         Loop is over
-                                                               }
-                                                             }
-                                                           }
-main.c                                               42:   Calling func_a with 57
-main.c                                               21:   func_a i=57 {
-                                                           }
-                                                         }
+main.c                                             main                   36: main {
+main.c                                             main                   38:   Calling func_a with 42
+main.c                                             func_a                 21:   func_a i=42 {
+main.c                                             func_a                 24:     Calling func_forty_two
+main.c                                             func_forty_two          4:     func_forty_two {
+main.c                                             func_forty_two          5:       I am in func_forty_two
+                                                                            :     }
+                                                                            :   }
+main.c                                             main                   40:   Calling func_a with 99
+main.c                                             func_a                 21:   func_a i=99 {
+main.c                                             func_a                 28:     Calling func_ninety_nine
+main.c                                             func_ninety_nine        9:     func_ninety_nine {
+main.c                                             func_ninety_nine       11:       loop from 5 to 10 {
+main.c                                             func_ninety_nine       14:         i=5
+main.c                                             func_ninety_nine       14:         i=6
+main.c                                             func_ninety_nine       14:         i=7
+main.c                                             func_ninety_nine       14:         i=8
+main.c                                             func_ninety_nine       14:         i=9
+main.c                                             func_ninety_nine       16:         Loop is over
+                                                                            :       }
+                                                                            :     }
+                                                                            :   }
+main.c                                             main                   42:   Calling func_a with 57
+main.c                                             func_a                 21:   func_a i=57 {
+                                                                            :   }
+                                                                            : }

@@ -64,23 +64,27 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
 }
 */
 
-static void tq84_debug_indent_(const char* filename, unsigned int line) {
+static void tq84_debug_indent_() {
 #ifdef TQ84_DEBUG_ENABLED
-
-//if (! f_debug) tq84_debug_open();
-
-  if (filename) {
-    fprintf(f_debug, "%-50s %4d: ", filename, line);
-  }
-  else {
-    fprintf(f_debug, "%-50s       ", "");
-  }
-  int i;
-  for (i=0; i<indent*2; i++) {
+  for (int i=0; i<indent*2; i++) {
     fprintf(f_debug, " ");
   }
 #endif
 }
+
+static void tq84_debug_indent_null() {
+#ifdef TQ84_DEBUG_ENABLED
+  fprintf(f_debug, "%-50s %-20s %4s: ", "", "", "");
+  tq84_debug_indent_();
+#endif
+}
+static void tq84_debug_indent_position(const char* filename, const char* funcname, unsigned int line) {
+#ifdef TQ84_DEBUG_ENABLED
+  fprintf(f_debug, "%-50s %-20s %4d: ", filename, funcname,line);
+  tq84_debug_indent_();
+#endif
+}
+
 
 TQ84_DEBUG_EXPORT void tq84_debug_open(const char* mode_a_or_w) { // mode_a_or_w: a = append to log file, w = create it
 #ifdef TQ84_DEBUG_ENABLED
@@ -113,14 +117,14 @@ TQ84_DEBUG_EXPORT void tq84_debug_open(const char* mode_a_or_w) { // mode_a_or_w
 #endif
 }
 
-TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigned int line, const char* fmt, ...) {
+TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, const char* funcname, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
 
   va_list ap; va_start(ap, fmt);
 
 //if (tq84_debug_dont_env(env)) return 0;
  
-  tq84_debug_indent_(filename, line);
+  tq84_debug_indent_position(filename, funcname, line);
   tq84_debug_out(fmt, ap);
 
 //tq84_debug_out("{\n", NULL);
@@ -138,7 +142,7 @@ TQ84_DEBUG_EXPORT void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const ch
 //if (tq84_debug_dont_env(env)) return;
 
   indent--;
-  tq84_debug_indent_(NULL, 0);
+  tq84_debug_indent_null();
 
 //tq84_debug_out("}\n", NULL);
   fprintf(f_debug, "}\n");
@@ -146,13 +150,13 @@ TQ84_DEBUG_EXPORT void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const ch
 
 #endif
 }
-TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, unsigned int line, const char* fmt, ...) {
+TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, const char* funcname, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
   va_list ap; va_start(ap, fmt);
 
 //if (tq84_debug_dont_env(env)) return;
 
-  tq84_debug_indent_(filename, line);
+  tq84_debug_indent_position(filename, funcname, line);
   tq84_debug_out(fmt, ap);
 
 //tq84_debug_out("\n", NULL);
