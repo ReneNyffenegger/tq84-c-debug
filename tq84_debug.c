@@ -4,13 +4,22 @@
 
 #include "tq84_debug.h"
 
-static FILE* f_debug = NULL;
+#define TQ84_DEBUG_ENABLED
+
+#ifdef TQ84_DEBUG_ENABLED
+
+#ifndef TQ84_DEBUG_TO_FILE
+#define TQ84_DEBUG_TO_FILE
+#endif
 
 int   indent;
 
-#define TQ84_DEBUG_ENABLED 1
-
-#ifdef TQ84_DEBUG_ENABLED
+#ifdef TQ84_DEBUG_TO_FILE
+static FILE* f_debug = NULL;
+#else
+char tq84_debug_line[2048]; 
+int  tq84_debug_line_pos;
+#endif
 
 /* -------------------------------------------------------------------
   
@@ -28,14 +37,37 @@ TQ84_DEBUG_EXPORT void tq84_debug_var_goes_out_of_scope(int* v __attribute__((un
   tq84_debug_dedent();
 }
 
-#endif
 
-TQ84_DEBUG_EXPORT void tq84_debug_out(const char* fmt, va_list ap) {
+TQ84_DEBUG_EXPORT void tq84_debug_out_va_list(const char* fmt, va_list ap) {
 #ifdef TQ84_DEBUG_ENABLED
-vfprintf(f_debug, fmt, ap);
+  #ifdef TQ84_DEBUG_TO_FILE
+    vfprintf(f_debug, fmt, ap);
+  #else
+    tq84_debug_line_pos += vsprintf(&tq84_debug_line[tq84_debug_line_pos], fmt, ap);
+  #endif
 #endif
 }
 
+TQ84_DEBUG_EXPORT void tq84_debug_out(const char* fmt, ...) {
+#ifdef TQ84_DEBUG_ENABLED
+  va_list ap; va_start(ap, fmt);
+  tq84_debug_out_va_list(fmt, ap);
+#endif
+}
+
+TQ84_DEBUG_EXPORT void tq84_debug_end_line() {
+#ifdef TQ84_DEBUG_ENABLED
+  #ifdef TQ84_DEBUG_TO_FILE
+    fflush(f_debug);
+  #else
+    tq84_debug_line[tq84_debug_line_pos+1]=0;
+    printf(tq84_debug_line);
+    tq84_debug_line_pos=0;
+  #endif
+#endif
+}
+
+#endif
 /*
 static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
   if (env ==    1) return 0;
@@ -62,27 +94,31 @@ static void tq84_debug_indent_() {
 #ifdef TQ84_DEBUG_ENABLED
   int i;
   for (i=0; i<indent*2; i++) {
-    fprintf(f_debug, " ");
+    tq84_debug_out(" ");
+//  fprintf(f_debug, " ");
   }
 #endif
 }
 
 static void tq84_debug_indent_null() {
 #ifdef TQ84_DEBUG_ENABLED
-  fprintf(f_debug, "%-50s %-20s %4s: ", "", "", "");
-  tq84_debug_indent_();
-#endif
-}
-static void tq84_debug_indent_position(const char* filename, const char* funcname, unsigned int line) {
-#ifdef TQ84_DEBUG_ENABLED
-  fprintf(f_debug, "%-50s %-20s %4d: ", filename, funcname,line);
+  tq84_debug_out("%-50s %-20s %4s: ", "", "", "");
+//fprintf(f_debug, "%-50s %-20s %4s: ", "", "", "");
   tq84_debug_indent_();
 #endif
 }
 
+static void tq84_debug_indent_position(const char* filename, const char* funcname, unsigned int line) {
+#ifdef TQ84_DEBUG_ENABLED
+  tq84_debug_out("%-50s %-20s %4d: ", filename, funcname, line);
+//fprintf(f_debug, "%-50s %-20s %4d: ", filename, funcname, line);
+  tq84_debug_indent_();
+#endif
+}
 
 TQ84_DEBUG_EXPORT void tq84_debug_open(const char* filename, const char* mode_a_or_w) { /* mode_a_or_w: a = append to log file, w = create it */
 #ifdef TQ84_DEBUG_ENABLED
+  #ifdef TQ84_DEBUG_TO_FILE
   /*
   time_t t;
   struct tm tm;
@@ -111,6 +147,9 @@ TQ84_DEBUG_EXPORT void tq84_debug_open(const char* filename, const char* mode_a_
       filename);
 
   f_debug = fopen(file_name, mode_a_or_w);
+  #else
+    tq84_debug_line_pos=0;
+  #endif
 #endif
 }
 
@@ -122,10 +161,12 @@ TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char*
 /* if (tq84_debug_dont_env(env)) return 0; */
  
   tq84_debug_indent_position(filename, funcname, line);
-  tq84_debug_out(fmt, ap);
+  tq84_debug_out_va_list(fmt, ap);
 
-  fprintf(f_debug, " {\n");
-  fflush(f_debug);
+  tq84_debug_out(" {\n");
+//fprintf(f_debug, " {\n");
+//fflush(f_debug);
+  tq84_debug_end_line();
 
   indent++;
 #endif
@@ -140,8 +181,10 @@ TQ84_DEBUG_EXPORT void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const ch
   indent--;
   tq84_debug_indent_null();
 
-  fprintf(f_debug, "}\n");
-  fflush(f_debug);
+  tq84_debug_out("}\n");
+//fprintf(f_debug, "}\n");
+//fflush(f_debug);
+  tq84_debug_end_line();
 
 #endif
 }
@@ -152,10 +195,12 @@ TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filen
 /*if (tq84_debug_dont_env(env)) return; */
 
   tq84_debug_indent_position(filename, funcname, line);
-  tq84_debug_out(fmt, ap);
+  tq84_debug_out_va_list(fmt, ap);
 
-  fprintf(f_debug, "\n");
+  tq84_debug_out("\n");
+//fprintf(f_debug, "\n");
 
-  fflush(f_debug);
+//fflush(f_debug);
+  tq84_debug_end_line();
 #endif
 }
