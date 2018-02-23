@@ -5,8 +5,10 @@ void func_forty_two() {
   TQ84_DEBUG("I am in func_forty_two");
 }
 
-void func_ninety_nine(int from, int to) {
+const char* func_ninety_nine(int from, int to) {
   TQ84_DEBUG_INDENT_T("func_ninety_nine");
+
+  static const char* return_value = "return value of func_ninety_nine";
 
   { TQ84_DEBUG_INDENT_T("loop from %d to %d", from, to);
 
@@ -15,6 +17,8 @@ void func_ninety_nine(int from, int to) {
     }
     TQ84_DEBUG("Loop is over");
   }
+
+  TQ84_DEBUG_RETURN(return_value);
 }
 
 void func_a(int i) {
@@ -26,9 +30,9 @@ void func_a(int i) {
   }
   else if (i == 99) {
     TQ84_DEBUG("Calling func_ninety_nine");
-    func_ninety_nine(5, 10);
+    const char* ret_99 = func_ninety_nine(5, 10);
+    TQ84_DEBUG("ret_99 = %s", ret_99);
   }
-
 }
 
 int main() {
