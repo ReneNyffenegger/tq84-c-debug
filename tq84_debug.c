@@ -60,7 +60,7 @@ TQ84_DEBUG_EXPORT void tq84_debug_end_line() {
   #ifdef TQ84_DEBUG_TO_FILE
     fflush(f_debug);
   #else
-    tq84_debug_line[tq84_debug_line_pos+1]=0;
+//  tq84_debug_line[tq84_debug_line_pos+1]=0;
     printf(tq84_debug_line);
     tq84_debug_line_pos=0;
   #endif
@@ -95,7 +95,6 @@ static void tq84_debug_indent_() {
   int i;
   for (i=0; i<indent*2; i++) {
     tq84_debug_out(" ");
-//  fprintf(f_debug, " ");
   }
 #endif
 }
@@ -103,7 +102,6 @@ static void tq84_debug_indent_() {
 static void tq84_debug_indent_null() {
 #ifdef TQ84_DEBUG_ENABLED
   tq84_debug_out("%-50s %-20s %4s: ", "", "", "");
-//fprintf(f_debug, "%-50s %-20s %4s: ", "", "", "");
   tq84_debug_indent_();
 #endif
 }
@@ -111,7 +109,6 @@ static void tq84_debug_indent_null() {
 static void tq84_debug_indent_position(const char* filename, const char* funcname, unsigned int line) {
 #ifdef TQ84_DEBUG_ENABLED
   tq84_debug_out("%-50s %-20s %4d: ", filename, funcname, line);
-//fprintf(f_debug, "%-50s %-20s %4d: ", filename, funcname, line);
   tq84_debug_indent_();
 #endif
 }
@@ -164,8 +161,6 @@ TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char*
   tq84_debug_out_va_list(fmt, ap);
 
   tq84_debug_out(" {\n");
-//fprintf(f_debug, " {\n");
-//fflush(f_debug);
   tq84_debug_end_line();
 
   indent++;
@@ -180,10 +175,7 @@ TQ84_DEBUG_EXPORT void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const ch
 
   indent--;
   tq84_debug_indent_null();
-
   tq84_debug_out("}\n");
-//fprintf(f_debug, "}\n");
-//fflush(f_debug);
   tq84_debug_end_line();
 
 #endif
@@ -196,11 +188,8 @@ TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filen
 
   tq84_debug_indent_position(filename, funcname, line);
   tq84_debug_out_va_list(fmt, ap);
-
   tq84_debug_out("\n");
-//fprintf(f_debug, "\n");
-
-//fflush(f_debug);
   tq84_debug_end_line();
+
 #endif
 }
