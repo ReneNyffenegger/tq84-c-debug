@@ -60,7 +60,8 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
 
 static void tq84_debug_indent_() {
 #ifdef TQ84_DEBUG_ENABLED
-  for (int i=0; i<indent*2; i++) {
+  int i;
+  for (i=0; i<indent*2; i++) {
     fprintf(f_debug, " ");
   }
 #endif
@@ -99,7 +100,7 @@ TQ84_DEBUG_EXPORT void tq84_debug_open(const char* mode_a_or_w) { /* mode_a_or_w
   */
 
   sprintf(file_name,
-#ifdef unix
+#ifdef __unix__
       "/tmp/"
 #else
       "c:\\temp\\"
