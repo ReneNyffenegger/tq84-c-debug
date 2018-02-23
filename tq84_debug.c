@@ -81,7 +81,7 @@ static void tq84_debug_indent_position(const char* filename, const char* funcnam
 }
 
 
-TQ84_DEBUG_EXPORT void tq84_debug_open(const char* mode_a_or_w) { /* mode_a_or_w: a = append to log file, w = create it */
+TQ84_DEBUG_EXPORT void tq84_debug_open(const char* filename, const char* mode_a_or_w) { /* mode_a_or_w: a = append to log file, w = create it */
 #ifdef TQ84_DEBUG_ENABLED
   /*
   time_t t;
@@ -100,13 +100,15 @@ TQ84_DEBUG_EXPORT void tq84_debug_open(const char* mode_a_or_w) { /* mode_a_or_w
   */
 
   sprintf(file_name,
+/*
 #ifdef __unix__
       "/tmp/"
 #else
       "c:\\temp\\"
 #endif
+*/
 /*    "tq84_debug_%4d-%02d_%02d_%02d.%02d.%02d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec); */
-      "tq84_debug");
+      filename);
 
   f_debug = fopen(file_name, mode_a_or_w);
 #endif

@@ -36,7 +36,7 @@ void func_a(int i) {
 }
 
 int main() {
-  tq84_debug_open("w");
+  tq84_debug_open("/tmp/tq84_debug", "w");
   TQ84_DEBUG_INDENT_T("main");
 
   TQ84_DEBUG("Calling func_a with 42");

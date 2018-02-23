@@ -9,7 +9,7 @@ extern "C" {
 #define TQ84_DEBUG_ENV_TYPE unsigned int
 */
 
-void tq84_debug_open(const char* mode_a_or_w);
+void tq84_debug_open(const char* filename, const char* mode_a_or_w);
 void tq84_debug_dedent(/* TQ84_DEBUG_ENV_TYPE env  *//*const char* fmt, ...*/);
 int  tq84_debug_indent(/* TQ84_DEBUG_ENV_TYPE env, */  const char* filename, const char* funcname, unsigned int line, const char* fmt, ...);
 void tq84_debug       (/* TQ84_DEBUG_ENV_TYPE env, */  const char* filename, const char* funcname, unsigned int line, const char* fmt, ...);
