@@ -18,7 +18,7 @@ int   indent;
 static FILE* f_debug = NULL;
 #else
 char tq84_debug_line[2048]; 
-int  tq84_debug_line_pos;
+int  tq84_debug_line_pos = 0;
 #endif
 
 /* -------------------------------------------------------------------
@@ -60,8 +60,10 @@ TQ84_DEBUG_EXPORT void tq84_debug_end_line() {
   #ifdef TQ84_DEBUG_TO_FILE
     fflush(f_debug);
   #else
-//  tq84_debug_line[tq84_debug_line_pos+1]=0;
-    printf(tq84_debug_line);
+//  printf(tq84_debug_line);
+    openlog("inittq84", 0, LOG_DAEMON);
+    syslog(LOG_INFO, "%s", tq84_debug_line);
+    closelog();
     tq84_debug_line_pos=0;
   #endif
 #endif
@@ -113,9 +115,11 @@ static void tq84_debug_indent_position(const char* filename, const char* funcnam
 #endif
 }
 
-TQ84_DEBUG_EXPORT void tq84_debug_open(const char* filename, const char* mode_a_or_w) { /* mode_a_or_w: a = append to log file, w = create it */
+#ifdef TQ84_DEBUG_TO_FILE
+TQ84_DEBUG_EXPORT void tq84_debug_open(
+    const char* filename, const char* mode_a_or_w
+) { /* mode_a_or_w: a = append to log file, w = create it */
 #ifdef TQ84_DEBUG_ENABLED
-  #ifdef TQ84_DEBUG_TO_FILE
   /*
   time_t t;
   struct tm tm;
@@ -143,12 +147,11 @@ TQ84_DEBUG_EXPORT void tq84_debug_open(const char* filename, const char* mode_a_
 /*    "tq84_debug_%4d-%02d_%02d_%02d.%02d.%02d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec); */
       filename);
 
-  f_debug = fopen(file_name, mode_a_or_w);
-  #else
-    tq84_debug_line_pos=0;
-  #endif
+    f_debug = fopen(file_name, mode_a_or_w);
 #endif
 }
+#endif
+
 
 TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, const char* funcname, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
