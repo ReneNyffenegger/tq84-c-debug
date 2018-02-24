@@ -36,7 +36,14 @@ void func_a(int i) {
 }
 
 int main() {
-  tq84_debug_open("/tmp/tq84_debug_out_to_file", "w");
+
+#ifdef TQ84_DEBUG_TO_FILE
+  tq84_debug_open("/tmp/tq84_debug_out_to_file"  , "w");
+#else
+  tq84_debug_open("/tmp/tq84_debug_out_to_memory", "w");
+#endif
+
+
   TQ84_DEBUG_INDENT_T("main");
 
   TQ84_DEBUG("Calling func_a with 42");

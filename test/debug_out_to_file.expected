@@ -1,12 +1,12 @@
-main.c                                             main                   40: main {
-main.c                                             main                   42:   Calling func_a with 42
+main.c                                             main                   47: main {
+main.c                                             main                   49:   Calling func_a with 42
 main.c                                             func_a                 25:   func_a i=42 {
 main.c                                             func_a                 28:     Calling func_forty_two
 main.c                                             func_forty_two          4:     func_forty_two {
 main.c                                             func_forty_two          5:       I am in func_forty_two
                                                                             :     }
                                                                             :   }
-main.c                                             main                   44:   Calling func_a with 99
+main.c                                             main                   51:   Calling func_a with 99
 main.c                                             func_a                 25:   func_a i=99 {
 main.c                                             func_a                 32:     Calling func_ninety_nine
 main.c                                             func_ninety_nine        9:     func_ninety_nine {
@@ -22,7 +22,7 @@ main.c                                             func_ninety_nine       21:   
                                                                             :     }
 main.c                                             func_a                 34:     ret_99 = return value of func_ninety_nine
                                                                             :   }
-main.c                                             main                   46:   Calling func_a with 57
+main.c                                             main                   53:   Calling func_a with 57
 main.c                                             func_a                 25:   func_a i=57 {
                                                                             :   }
                                                                             : }
