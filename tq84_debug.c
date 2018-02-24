@@ -19,14 +19,15 @@
 int   indent;
 
 #ifdef TQ84_DEBUG_TO_FILE
-static FILE* f_debug = NULL;
+   static FILE* f_debug = NULL;
 #else
 // char tq84_debug_line[2048]; 
 // int  tq84_debug_line_pos = 0;
    #define  tq84_debug_memory_size 0x40000
-   char tq84_debug_memory[tq84_debug_memory_size]; 
-   int  tq84_debug_memory_pos = 0;
-   int  tq84_debug_memory_already_written = 0;
+   char  tq84_debug_memory[tq84_debug_memory_size]; 
+   int   tq84_debug_memory_pos = 0;
+   int   tq84_debug_memory_already_written = 0;
+   const char* tq84_debug_memory_filename;
 #endif
 
 /* -------------------------------------------------------------------
@@ -51,7 +52,7 @@ TQ84_DEBUG_EXPORT void tq84_debug_out_va_list(const char* fmt, va_list ap) {
   #ifdef TQ84_DEBUG_TO_FILE
     vfprintf(f_debug, fmt, ap);
   #else
-    tq84_debug_memory_pos += vsprintf(&tq84_debug_line[tq84_debug_memory_pos], fmt, ap);
+    tq84_debug_memory_pos += vsprintf(&tq84_debug_memory[tq84_debug_memory_pos], fmt, ap);
   #endif
 #endif
 }
@@ -69,20 +70,12 @@ TQ84_DEBUG_EXPORT void tq84_debug_end_line() {
     fprintf(f_debug, "\n");
     fflush(f_debug);
   #else
-    static int already_written = 0;
-    const char* filename = "/tmp/tq84-debug";
+//  const char* filename = "/tmp/tq84_debug_out_to_memory";
 
-    tq84_debug_memory[tq84_debug_memory_pos++] = "\n";
+    tq84_debug_memory[tq84_debug_memory_pos++] = '\n';
 
     if (tq84_debug_memory_pos > tq84_debug_memory_size - 255) {
-
-       if (! tq84_debug_memory_already_written) {
-         int f = fopen(filename, "w");
-         fprintf(f, tq84_debug_memory);
-         fclose(f);
-         tq84_debug_memory_already_written = 1;
-      }
-
+        tq84_debug_close();
     }
 
     
@@ -142,11 +135,11 @@ static void tq84_debug_indent_position(const char* filename, const char* funcnam
 #endif
 }
 
-#ifdef TQ84_DEBUG_TO_FILE
 TQ84_DEBUG_EXPORT void tq84_debug_open(
     const char* filename, const char* mode_a_or_w
 ) { /* mode_a_or_w: a = append to log file, w = create it */
 #ifdef TQ84_DEBUG_ENABLED
+  #ifdef TQ84_DEBUG_TO_FILE
   /*
   time_t t;
   struct tm tm;
@@ -175,9 +168,11 @@ TQ84_DEBUG_EXPORT void tq84_debug_open(
       filename);
 
     f_debug = fopen(file_name, mode_a_or_w);
+  #else
+    tq84_debug_memory_filename = filename;
+  #endif
 #endif
 }
-#endif
 
 
 TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, const char* funcname, unsigned int line, const char* fmt, ...) {
@@ -210,6 +205,7 @@ TQ84_DEBUG_EXPORT void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const ch
 
 #endif
 }
+
 TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, const char* funcname, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
   va_list ap; va_start(ap, fmt);
@@ -220,6 +216,24 @@ TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filen
   tq84_debug_out_va_list(fmt, ap);
   tq84_debug_out("");
   tq84_debug_end_line();
+
+#endif
+}
+
+
+TQ84_DEBUG_EXPORT void tq84_debug_close() {
+#ifdef TQ84_DEBUG_ENABLED
+
+  #ifdef TQ84_DEBUG_TO_MEMORY
+    if (! tq84_debug_memory_already_written) {
+//    FILE* f = fopen(tq84_debug_memory_filename, "w");
+      FILE* f = fopen("/tmp/tq84_debug_out_to_memory", "w");
+      fprintf(f, tq84_debug_memory);
+      fclose(f);
+      tq84_debug_memory_already_written = 1;
+    }
+
+  #endif
 
 #endif
 }

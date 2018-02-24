@@ -45,5 +45,5 @@ int main() {
   func_a(99);
   TQ84_DEBUG("Calling func_a with 57");
   func_a(57);
-
+  tq84_debug_close();
 }
