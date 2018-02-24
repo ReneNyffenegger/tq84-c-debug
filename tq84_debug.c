@@ -4,7 +4,7 @@
 
 #include "tq84_debug.h"
 
-#define TQ84_DEBUG_ENABLED
+// #define TQ84_DEBUG_ENABLED
 
 #ifdef TQ84_DEBUG_ENABLED
 
@@ -12,9 +12,6 @@
   #error "Specify TQ84_DEBUG_TO_FILE or TQ84_DEBUG_TO_MEMORY"
 #endif
 
-#ifndef TQ84_DEBUG_TO_FILE
-//#define TQ84_DEBUG_TO_FILE
-#endif
 
 int   indent;
 
@@ -52,7 +49,9 @@ TQ84_DEBUG_EXPORT void tq84_debug_out_va_list(const char* fmt, va_list ap) {
   #ifdef TQ84_DEBUG_TO_FILE
     vfprintf(f_debug, fmt, ap);
   #else
-    tq84_debug_memory_pos += vsprintf(&tq84_debug_memory[tq84_debug_memory_pos], fmt, ap);
+    if (!tq84_debug_memory_already_written) {
+       tq84_debug_memory_pos += vsprintf(&tq84_debug_memory[tq84_debug_memory_pos], fmt, ap);
+    }
   #endif
 #endif
 }
@@ -66,13 +65,14 @@ TQ84_DEBUG_EXPORT void tq84_debug_out(const char* fmt, ...) {
 
 TQ84_DEBUG_EXPORT void tq84_debug_end_line() {
 #ifdef TQ84_DEBUG_ENABLED
+  tq84_debug_out("\n");
   #ifdef TQ84_DEBUG_TO_FILE
-    fprintf(f_debug, "\n");
+//  fprintf(f_debug, "\n");
     fflush(f_debug);
   #else
 //  const char* filename = "/tmp/tq84_debug_out_to_memory";
 
-    tq84_debug_memory[tq84_debug_memory_pos++] = '\n';
+//  tq84_debug_memory[tq84_debug_memory_pos++] = '\n';
 
     if (tq84_debug_memory_pos > tq84_debug_memory_size - 255) {
         tq84_debug_close();
@@ -89,7 +89,6 @@ TQ84_DEBUG_EXPORT void tq84_debug_end_line() {
 #endif
 }
 
-#endif
 /*
 static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
   if (env ==    1) return 0;
@@ -237,3 +236,5 @@ TQ84_DEBUG_EXPORT void tq84_debug_close() {
 
 #endif
 }
+
+#endif

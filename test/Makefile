@@ -23,7 +23,7 @@ tq84_test_debug_to_memory: tq84_debug_to_memory.o main_debug_to_memory.o
 #     The the TO_FILE files
 
 tq84_debug_to_file.o: ../tq84_debug.c ../tq84_debug.h
-	@gcc -DTQ84_DEBUG_TO_FILE -W -Wall -Wextra -c ../tq84_debug.c -o tq84_debug_to_file.o
+	@gcc -DTQ84_DEBUG_ENABLED -DTQ84_DEBUG_TO_FILE -W -Wall -Wextra -c ../tq84_debug.c -o tq84_debug_to_file.o
 
 main_debug_to_file.o: ../tq84_debug.h main_debug_to_file.i
 	@gcc -I.. -W -Wall -Wextra -c main_debug_to_file.i -o main_debug_to_file.o
@@ -32,8 +32,8 @@ main_debug_to_file.o: ../tq84_debug.h main_debug_to_file.i
 #     The the TO_MEMORY files
 #     
 
-tq84_debug_to_memory.o: ../tq84_debug.c ../tq84_debug.h
-	@gcc -DTQ84_DEBUG_TO_MEMORY -W -Wall -Wextra -c ../tq84_debug.c -o tq84_debug_to_memory.o
+tq84_debug_to_memory.o: tq84_debug_to_memory.i
+	@gcc -DTQ84_DEBUG_ENABLED -DTQ84_DEBUG_TO_MEMORY -W -Wall -Wextra -c tq84_debug_to_memory.i -o tq84_debug_to_memory.o
 
 main_debug_to_memory.o: ../tq84_debug.h main_debug_to_memory.i
 	@gcc -I.. -W -Wall -Wextra -c main_debug_to_memory.i -o main_debug_to_memory.o
@@ -43,10 +43,13 @@ main_debug_to_memory.o: ../tq84_debug.h main_debug_to_memory.i
 #
 
 main_debug_to_file.i:  ../tq84_debug.h main.c
-	@gcc -DTQ84_DEBUG_TO_FILE -I.. -W -Wall -Wextra -E main.c -o main_debug_to_file.i
+	@gcc -DTQ84_DEBUG_ENABLED -DTQ84_DEBUG_TO_FILE -I.. -W -Wall -Wextra -E main.c -o main_debug_to_file.i
 
 main_debug_to_memory.i:  ../tq84_debug.h main.c
-	@gcc -DTQ84_DEBUG_TO_MEMORY -I.. -W -Wall -Wextra -E main.c -o main_debug_to_memory.i
+	@gcc -DTQ84_DEBUG_ENABLED -DTQ84_DEBUG_TO_MEMORY -I.. -W -Wall -Wextra -E main.c -o main_debug_to_memory.i
+
+tq84_debug_to_memory.i:  ../tq84_debug.c ../tq84_debug.h
+	@gcc -DTQ84_DEBUG_ENABLED -DTQ84_DEBUG_TO_MEMORY -W -Wall -Wextra -E ../tq84_debug.c -o tq84_debug_to_memory.i
 
 clean:
 	@rm -f *.o *.i tq84_test*
