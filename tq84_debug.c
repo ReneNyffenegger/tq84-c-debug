@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdarg.h>
-#include <time.h>
 
 #include "tq84_debug.h"
 
@@ -8,23 +5,32 @@
 
 #ifdef TQ84_DEBUG_ENABLED
 
-#if !defined(TQ84_DEBUG_TO_FILE) && !defined(TQ84_DEBUG_TO_MEMORY)
+#if !defined(TQ84_DEBUG_TO_FILE) && !defined(TQ84_DEBUG_TO_MEMORY) && !defined(TQ84_DEBUG_KERNEL)
   #error "Specify TQ84_DEBUG_TO_FILE or TQ84_DEBUG_TO_MEMORY"
 #endif
 
 
 int   indent;
 
-#ifdef TQ84_DEBUG_TO_FILE
-   static FILE* f_debug = NULL;
-#else
-// char tq84_debug_line[2048]; 
-// int  tq84_debug_line_pos = 0;
-   #define  tq84_debug_memory_size 0x40000
-   char  tq84_debug_memory[tq84_debug_memory_size]; 
-   int   tq84_debug_memory_pos = 0;
-   int   tq84_debug_memory_already_written = 0;
-   const char* tq84_debug_memory_filename;
+#if defined(TQ84_DEBUG_TO_FILE) || defined(TQ84_DEBUG_TO_MEMORY)
+
+   #include <stdio.h>
+   #include <stdarg.h>
+// #include <time.h>
+
+   #ifdef TQ84_DEBUG_TO_FILE
+     static FILE* f_debug = NULL;
+   #else
+     #define  tq84_debug_memory_size 0x40000
+     char  tq84_debug_memory[tq84_debug_memory_size]; 
+     int   tq84_debug_memory_pos = 0;
+     int   tq84_debug_memory_already_written = 0;
+     const char* tq84_debug_memory_filename;
+   #endif
+
+#endif
+#if defined(TQ84_DEBUG_KERNEL)
+
 #endif
 
 /* -------------------------------------------------------------------
@@ -63,7 +69,7 @@ TQ84_DEBUG_EXPORT void tq84_debug_out(const char* fmt, ...) {
 #endif
 }
 
-TQ84_DEBUG_EXPORT void tq84_debug_end_line() {
+TQ84_DEBUG_EXPORT void tq84_debug_end_line(void) {
 #ifdef TQ84_DEBUG_ENABLED
   tq84_debug_out("\n");
   #ifdef TQ84_DEBUG_TO_FILE
@@ -111,7 +117,7 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
 }
 */
 
-static void tq84_debug_indent_() {
+static void tq84_debug_indent_(void) {
 #ifdef TQ84_DEBUG_ENABLED
   int i;
   for (i=0; i<indent*2; i++) {
@@ -120,7 +126,7 @@ static void tq84_debug_indent_() {
 #endif
 }
 
-static void tq84_debug_indent_null() {
+static void tq84_debug_indent_null(void) {
 #ifdef TQ84_DEBUG_ENABLED
   tq84_debug_out("%-50s %-20s %4s: ", "", "", "");
   tq84_debug_indent_();
@@ -135,7 +141,10 @@ static void tq84_debug_indent_position(const char* filename, const char* funcnam
 }
 
 TQ84_DEBUG_EXPORT void tq84_debug_open(
-    const char* filename, const char* mode_a_or_w
+      const char* filename
+   #ifdef TQ84_DEBUG_TO_FILE
+    , const char* mode_a_or_w
+   #endif
 ) { /* mode_a_or_w: a = append to log file, w = create it */
 #ifdef TQ84_DEBUG_ENABLED
   #ifdef TQ84_DEBUG_TO_FILE
@@ -192,7 +201,7 @@ TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char*
   return 42;
 }
 
-TQ84_DEBUG_EXPORT void tq84_debug_dedent(/*TQ84_DEBUG_ENV_TYPE env*/  /*const char* fmt, ...*/) {
+TQ84_DEBUG_EXPORT void tq84_debug_dedent(void /*TQ84_DEBUG_ENV_TYPE env*/  /*const char* fmt, ...*/) {
 #ifdef TQ84_DEBUG_ENABLED
 
 /*if (tq84_debug_dont_env(env)) return; */
@@ -223,12 +232,18 @@ TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filen
 TQ84_DEBUG_EXPORT void tq84_debug_close() {
 #ifdef TQ84_DEBUG_ENABLED
 
-  #ifdef TQ84_DEBUG_TO_MEMORY
+  #if defined TQ84_DEBUG_TO_MEMORY || defined TQ84_DEBUG_KERNEL
     if (! tq84_debug_memory_already_written) {
-//    FILE* f = fopen(tq84_debug_memory_filename, "w");
-      FILE* f = fopen("/tmp/tq84_debug_out_to_memory", "w");
-      fprintf(f, tq84_debug_memory);
-      fclose(f);
+
+      #if defined TQ84_DEBUG_TO_MEMORY
+
+        FILE* f = fopen("/tmp/tq84_debug_out_to_memory", "w");
+        fprintf(f, tq84_debug_memory);
+        fclose(f);
+
+      #else
+
+      #endif 
       tq84_debug_memory_already_written = 1;
     }
 

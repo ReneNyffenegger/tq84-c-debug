@@ -40,7 +40,7 @@ int main() {
 #ifdef TQ84_DEBUG_TO_FILE
   tq84_debug_open("/tmp/tq84_debug_out_to_file"  , "w");
 #else
-  tq84_debug_open("/tmp/tq84_debug_out_to_memory", "w");
+  tq84_debug_open("/tmp/tq84_debug_out_to_memory"     );
 #endif
 
 
