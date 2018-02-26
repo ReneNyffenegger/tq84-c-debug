@@ -2,7 +2,11 @@
 extern "C" {
 #endif
 
+#ifndef TQ84_DEBUG_H
+#define TQ84_DEBUG_H
+
 #ifdef TQ84_DEBUG_ENABLED
+
 
 #define TQ84_CONCAT(a, b) a ## b
 #define TQ84_CONCAT_INDIRECT(a, b) TQ84_CONCAT(a, b)
@@ -50,6 +54,7 @@ void tq84_debug_var_goes_out_of_scope(int*);
 #define TQ84_DEBUG_INDENT()
 #define TQ84_DEBUG(...)
 
+#endif
 #endif
 
 #ifdef __cplusplus
