@@ -1,4 +1,3 @@
-
 #include "tq84_debug.h"
 
 // #define TQ84_DEBUG_ENABLED
@@ -18,7 +17,12 @@ int   indent;
    #include <stdarg.h>
 // #include <time.h>
 
-   #define TQ84_DEBUG_FUNC_WIDTH "50"
+   #ifndef TQ84_DEBUG_FILENAME_WIDTH
+      #define TQ84_DEBUG_FILENAME_WIDTH "50"
+   #endif
+   #ifndef TQ84_DEBUG_FUNCNAME_WIDTH
+      #define TQ84_DEBUG_FUNCNAME_WIDTH "20"
+   #endif
 
 #elif defined(TQ84_DEBUG_KERNEL)
 
@@ -27,7 +31,7 @@ int   indent;
    #define TQ84_CLASS_NAME   "tq84"
    #define TQ84_DEVICE_NAME  "tq84_debug"
 
-   #define TQ84_DEBUG_FUNC_WIDTH "35"
+   #define TQ84_DEBUG_FILENAME_WIDTH "35"
 
    static int     majNr;
    static struct  class*  tq84CharClass  = NULL;
@@ -77,7 +81,6 @@ TQ84_DEBUG_EXPORT void tq84_debug_var_goes_out_of_scope(int* v __attribute__((un
   tq84_debug_dedent();
 }
 
-
 TQ84_DEBUG_EXPORT void tq84_debug_out_va_list(const char* fmt, va_list ap) {
 #ifdef TQ84_DEBUG_ENABLED
   #if  defined(TQ84_DEBUG_TO_FILE)
@@ -111,7 +114,6 @@ TQ84_DEBUG_EXPORT void tq84_debug_end_line(void) {
   #endif
 #endif
 }
-
 /*
 static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
   if (env ==    1) return 0;
@@ -133,7 +135,6 @@ static int tq84_debug_dont_env(TQ84_DEBUG_ENV_TYPE env) {
   return 1;
 }
 */
-
 static void tq84_debug_indent_(void) {
 #ifdef TQ84_DEBUG_ENABLED
   int i;
@@ -145,7 +146,7 @@ static void tq84_debug_indent_(void) {
 
 static void tq84_debug_indent_null(void) {
 #ifdef TQ84_DEBUG_ENABLED
-  tq84_debug_out("%-" TQ84_DEBUG_FUNC_WIDTH "s %-20s %4s: ", "", "", "");
+  tq84_debug_out("%-" TQ84_DEBUG_FILENAME_WIDTH "s %-" TQ84_DEBUG_FUNCNAME_WIDTH "s %4s: ", "", "", "");
   tq84_debug_indent_();
 #endif
 }
@@ -153,7 +154,7 @@ static void tq84_debug_indent_null(void) {
 static void tq84_debug_indent_position(const char* filename, const char* funcname, unsigned int line) {
 #ifdef TQ84_DEBUG_ENABLED
   // tq84_debug_out("%-50s %-20s %4d: ", filename, funcname, line);
-  tq84_debug_out("%-" TQ84_DEBUG_FUNC_WIDTH "s %-20s %4d: ", filename, funcname, line);
+  tq84_debug_out("%-" TQ84_DEBUG_FILENAME_WIDTH "s %-" TQ84_DEBUG_FUNCNAME_WIDTH "s %4d: ", filename, funcname, line);
   tq84_debug_indent_();
 #endif
 }
@@ -201,7 +202,6 @@ TQ84_DEBUG_EXPORT void tq84_debug_open(
 #endif
 }
 
-
 TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filename, const char* funcname, unsigned int line, const char* fmt, ...) {
 #ifdef TQ84_DEBUG_ENABLED
 
@@ -246,7 +246,6 @@ TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filen
 
 #endif
 }
-
 
 TQ84_DEBUG_EXPORT void tq84_debug_close() {
 #ifdef TQ84_DEBUG_ENABLED
@@ -300,7 +299,6 @@ static int release_device(struct inode *inodep, struct file* filep) {
     return 0;
 }
 
-
 static int __init tq84_debug_dev_init(void) {         
  //
  // Compare with linux/drivers/char/mem.c
@@ -335,11 +333,8 @@ static int __init tq84_debug_dev_init(void) {
      return 0;
 }
 
-
 fs_initcall(tq84_debug_dev_init);
 
 #endif
-
-
 
 #endif
