@@ -26,9 +26,15 @@ void tq84_debug       (/* TQ84_DEBUG_ENV_TYPE env, */  const char* filename, con
 void tq84_debug_close(void);
 
 void tq84_debug_var_goes_out_of_scope(int*);
+#ifdef TQ84_DEBUG_TO_FILE
+#define TQ84_DEBUG_OPEN(f,m)       void tq84_debug_open(f, m)
+#else
+#define TQ84_DEBUG_OPEN(f)         void tq84_debug_open(f)
+#endif
 #define TQ84_DEBUG_INDENT_T(...)   int TQ84_CONCAT_INDIRECT(tq84_debug_, __COUNTER__)  __attribute__((cleanup (tq84_debug_var_goes_out_of_scope) )) = tq84_debug_indent(__FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
 #define TQ84_DEBUG_INDENT()        int TQ84_CONCAT_INDIRECT(tq84_debug_, __COUNTER__)  __attribute__((cleanup (tq84_debug_var_goes_out_of_scope) )) = tq84_debug_indent(__FILE__, __FUNCTION__, __LINE__, __FUNCTION__)
 #define TQ84_DEBUG(...)                                                                                                                               tq84_debug       (__FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+#define TQ84_DEBUG_DEDENT(x)       void tq84_debug_dedent(x);
 
 #define TQ84_DEBUG_RETURN(x) \
     switch ( _Generic( (x), \
@@ -48,11 +54,12 @@ void tq84_debug_var_goes_out_of_scope(int*);
 
 #else
 
-#define tq84_debug_open(...)
-#define tq84_debug_close(...)
+#define TQ84_DEBUG_OPEN(...)
+#define TQ84_DEBUG_CLOSE(...)
 #define TQ84_DEBUG_INDENT_T(...)
 #define TQ84_DEBUG_INDENT()
 #define TQ84_DEBUG(...)
+#define TQ84_DEBUG_DEDENT(x)
 
 #endif
 #endif
