@@ -1,4 +1,3 @@
-
 .PHONY: diff
 
 GCCSTD=-std=c99
