@@ -38,9 +38,9 @@ void func_a(int i) {
 int main() {
 
 #ifdef TQ84_DEBUG_TO_FILE
-  tq84_debug_open("/tmp/tq84_debug_out_to_file"  , "w");
+  tq84_debug_open("debug_out_to_file.gotten"  , "w");
 #else
-  tq84_debug_open("/tmp/tq84_debug_out_to_memory"     );
+  tq84_debug_open("debug_out_to_memory.gotten"     );
 #endif
 
 

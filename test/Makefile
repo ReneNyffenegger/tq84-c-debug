@@ -2,21 +2,32 @@
 
 GCCSTD=-std=c99
 
-diff: tq84_test_debug_to_file  tq84_test_debug_to_memory
+ifeq ($(OS),Windows_NT)
+   DIFF = fc
+else
+   DIFF = diff
+endif
+
+
+diff: debug_out_to_file.gotten  debug_out_to_memory.gotten
+	@$(DIFF) debug_out_to_file.gotten   debug_out_to_file.expected
+	@$(DIFF) debug_out_to_memory.gotten debug_out_to_memory.expected
+
+debug_out_to_file.gotten: tq84_test_debug_to_file
 	@./tq84_test_debug_to_file
+	
+debug_out_to_memory.gotten: tq84_test_debug_to_memory
 	@./tq84_test_debug_to_memory
-	@diff /tmp/tq84_debug_out_to_file   debug_out_to_file.expected
-	@diff /tmp/tq84_debug_out_to_memory debug_out_to_memory.expected
 
 #
 #  Creating the executables
 #
 
-tq84_test_debug_to_file: tq84_debug_to_file.o main_debug_to_file.o
-	@gcc $(GCCSTD) tq84_debug_to_file.o main_debug_to_file.o -o tq84_test_debug_to_file
+tq84_test_debug_to_file:    tq84_debug_to_file.o main_debug_to_file.o
+	@gcc $(GCCSTD)            tq84_debug_to_file.o main_debug_to_file.o    -o tq84_test_debug_to_file
 
 tq84_test_debug_to_memory: tq84_debug_to_memory.o main_debug_to_memory.o
-	@gcc $(GCCSTD) tq84_debug_to_memory.o main_debug_to_memory.o -o tq84_test_debug_to_memory
+	@gcc $(GCCSTD)           tq84_debug_to_memory.o main_debug_to_memory.o -o tq84_test_debug_to_memory
 
 #
 #  Creating *.o files

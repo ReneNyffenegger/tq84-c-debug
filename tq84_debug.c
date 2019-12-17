@@ -1,13 +1,18 @@
 #include "tq84_debug.h"
 
-// #define TQ84_DEBUG_ENABLED
-
 #ifdef TQ84_DEBUG_ENABLED
 
 #if !defined(TQ84_DEBUG_TO_FILE) && !defined(TQ84_DEBUG_TO_MEMORY) && !defined(TQ84_DEBUG_KERNEL)
   #error "Specify TQ84_DEBUG_TO_FILE or TQ84_DEBUG_TO_MEMORY"
 #endif
 
+#ifndef TQ84_DEBUG_OPENING_TAG
+#define TQ84_DEBUG_OPENING_TAG " {"
+#endif
+
+#ifndef TQ84_DEBUG_CLOSING_TAG
+#define TQ84_DEBUG_CLOSING_TAG "}"
+#endif
 
 int   indent;
 
@@ -64,7 +69,6 @@ int   indent;
 #endif
 
 
-
 /* -------------------------------------------------------------------
   
    Allow the user to define TQ84_DEBUG_EXPORT in order to
@@ -99,6 +103,19 @@ TQ84_DEBUG_EXPORT void tq84_debug_out(const char* fmt, ...) {
   tq84_debug_out_va_list(fmt, ap);
 #endif
 }
+
+#ifdef TQ84_DEBUG_TIMESTAMP
+void tq84_debug_out_timestamp() {
+
+  time_t t;
+  struct tm tm;
+  t=time(NULL);
+  tm = *localtime(&t);
+  
+  tq84_debug_out("%4d-%02d_%02d_%02d.%02d.%02d ", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+}
+#endif
+
 
 TQ84_DEBUG_EXPORT void tq84_debug_end_line(void) {
 #ifdef TQ84_DEBUG_ENABLED
@@ -146,6 +163,9 @@ static void tq84_debug_indent_(void) {
 
 static void tq84_debug_indent_null(void) {
 #ifdef TQ84_DEBUG_ENABLED
+  #ifdef TQ84_DEBUG_TIMESTAMP
+  tq84_debug_out_timestamp();
+  #endif
   tq84_debug_out("%-" TQ84_DEBUG_FILENAME_WIDTH "s %-" TQ84_DEBUG_FUNCNAME_WIDTH "s %4s: ", "", "", "");
   tq84_debug_indent_();
 #endif
@@ -153,6 +173,9 @@ static void tq84_debug_indent_null(void) {
 
 static void tq84_debug_indent_position(const char* filename, const char* funcname, unsigned int line) {
 #ifdef TQ84_DEBUG_ENABLED
+  #ifdef TQ84_DEBUG_TIMESTAMP
+  tq84_debug_out_timestamp(); // 2019-12-17
+  #endif
   // tq84_debug_out("%-50s %-20s %4d: ", filename, funcname, line);
   tq84_debug_out("%-" TQ84_DEBUG_FILENAME_WIDTH "s %-" TQ84_DEBUG_FUNCNAME_WIDTH "s %4d: ", filename, funcname, line);
   tq84_debug_indent_();
@@ -212,7 +235,7 @@ TQ84_DEBUG_EXPORT int tq84_debug_indent(/*TQ84_DEBUG_ENV_TYPE env,*/ const char*
   tq84_debug_indent_position(filename, funcname, line);
   tq84_debug_out_va_list(fmt, ap);
 
-  tq84_debug_out(" {");
+  tq84_debug_out(TQ84_DEBUG_OPENING_TAG);
   tq84_debug_end_line();
 
   indent++;
@@ -227,7 +250,7 @@ TQ84_DEBUG_EXPORT void tq84_debug_dedent(void /*TQ84_DEBUG_ENV_TYPE env*/  /*con
 
   indent--;
   tq84_debug_indent_null();
-  tq84_debug_out("}");
+  tq84_debug_out(TQ84_DEBUG_CLOSING_TAG);
   tq84_debug_end_line();
 
 #endif
@@ -237,7 +260,7 @@ TQ84_DEBUG_EXPORT void tq84_debug(/*TQ84_DEBUG_ENV_TYPE env,*/ const char* filen
 #ifdef TQ84_DEBUG_ENABLED
   va_list ap; va_start(ap, fmt);
 
-/*if (tq84_debug_dont_env(env)) return; */
+/*If (tq84_debug_dont_env(env)) return; */
 
   tq84_debug_indent_position(filename, funcname, line);
   tq84_debug_out_va_list(fmt, ap);
@@ -256,7 +279,8 @@ TQ84_DEBUG_EXPORT void tq84_debug_close() {
 
       #if defined TQ84_DEBUG_TO_MEMORY
 
-         FILE* f = fopen("/tmp/tq84_debug_out_to_memory", "w");
+//       FILE* f = fopen("/tmp/tq84_debug_out_to_memory", "w");
+         FILE* f = fopen(tq84_debug_memory_filename, "w");
          fprintf(f, tq84_debug_memory);
          fclose(f);
 
