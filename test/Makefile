@@ -41,7 +41,7 @@ main_debug_to_file.o: ../tq84_debug.h main_debug_to_file.i
 	@gcc $(GCCSTD) -I.. -W -Wall -Wextra -c main_debug_to_file.i -o main_debug_to_file.o
 
 #
-#     The the TO_MEMORY files
+#     The TO_MEMORY files
 #     
 
 tq84_debug_to_memory.o: tq84_debug_to_memory.i
