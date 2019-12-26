@@ -23,6 +23,7 @@ void tq84_debug_open(const char* filename
 void tq84_debug_dedent(void /* TQ84_DEBUG_ENV_TYPE env  *//*const char* fmt, ...*/);
 int  tq84_debug_indent(/* TQ84_DEBUG_ENV_TYPE env, */  const char* filename, const char* funcname, unsigned int line, const char* fmt, ...);
 void tq84_debug       (/* TQ84_DEBUG_ENV_TYPE env, */  const char* filename, const char* funcname, unsigned int line, const char* fmt, ...);
+void tq84_debug_out(const char* fmt, ...); // Write something directly into log file, should normally not be used.
 void tq84_debug_close(void);
 
 void tq84_debug_var_goes_out_of_scope(int*);
